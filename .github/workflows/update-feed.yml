@@ -1,5 +1,8 @@
 name: Update RSS Feed
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 */6 * * *'  # Every 6 hours
@@ -19,14 +22,22 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 feedgen
+        run: |
+          pip install requests beautifulsoup4 feedgen selenium
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser chromium-chromedriver
       
-      - name: Run scraper
+      - name: Run Trump campaign scraper
         run: python trump_rss.py
+      
+      - name: Run White House scraper
+        run: |
+          export PATH=$PATH:/usr/lib/chromium-browser
+          python whitehouse_rss.py
       
       - name: Commit and push if changed
         run: |
           git config --global user.name 'RSS Bot'
           git config --global user.email 'bot@users.noreply.github.com'
-          git add trump_feed.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feed [automated]" && git push)
+          git add trump_feed.xml whitehouse_feed.xml
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feeds [automated]" && git push)
