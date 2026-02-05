@@ -28,7 +28,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 selenium
+        pip install requests beautifulsoup4 selenium feedgen
     
     - name: Run Trump campaign scraper
       run: python scrape_trump_campaign.py
