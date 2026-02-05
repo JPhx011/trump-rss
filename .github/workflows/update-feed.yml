@@ -1,43 +1,44 @@
 name: Update RSS Feed
 
-permissions:
-  contents: write
-
 on:
   schedule:
-    - cron: '0 */6 * * *'  # Every 6 hours
-  workflow_dispatch:  # Manual trigger button
+    - cron: '0 2,8,14,20 * * *'
+  workflow_dispatch:
 
 jobs:
   update:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget gnupg
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+    
+    - name: Install dependencies
+      run: |
+        pip install requests beautifulsoup4 selenium
+    
+    - name: Run Trump campaign scraper
+      run: python scrape_trump_campaign.py
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      - name: Install dependencies
-        run: |
-          pip install requests beautifulsoup4 feedgen selenium
-          sudo apt-get update
-          sudo apt-get install -y chromium-browser chromium-chromedriver
-      
-      - name: Run Trump campaign scraper
-        run: python trump_rss.py
-      
-      - name: Run White House scraper
-        run: |
-          export PATH=$PATH:/usr/lib/chromium-browser
-          python whitehouse_rss.py
-      
-      - name: Commit and push if changed
-        run: |
-          git config --global user.name 'RSS Bot'
-          git config --global user.email 'bot@users.noreply.github.com'
-          git add trump_feed.xml whitehouse_feed.xml
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feeds [automated]" && git push)
+    - name: Run White House scraper
+      run: python scrape_whitehouse.py
+    
+    - name: Commit and push if changed
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add *.xml
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feeds" && git push)
