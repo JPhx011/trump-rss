@@ -2,8 +2,8 @@ name: Update RSS Feed
 
 on:
   schedule:
-    - cron: '0 2,8,14,20 * * *'
-  workflow_dispatch:
+    - cron: '0 2,8,14,20 * * *'  # Runs at 2am, 8am, 2pm, 8pm UTC
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   update:
@@ -28,17 +28,23 @@ jobs:
     
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 selenium feedgen
+        pip install -r requirements.txt
     
     - name: Run Trump campaign scraper
       run: python scrape_trump_campaign.py
+      continue-on-error: true  # Don't fail entire job if this scraper fails
       
     - name: Run White House scraper
       run: python scrape_whitehouse.py
+      continue-on-error: true
+    
+    - name: Run Wire scraper
+      run: python scrape_wire.py
+      continue-on-error: true
     
     - name: Commit and push if changed
       run: |
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git add *.xml
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feeds" && git push)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Update RSS feeds [automated]" && git push)
