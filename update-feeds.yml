@@ -42,6 +42,10 @@ jobs:
       run: python scrape_wire.py
       continue-on-error: true
     
+    - name: Run InfoWars scraper
+      run: python scrape_infowars.py
+      continue-on-error: true
+    
     - name: Commit and push if changed
       run: |
         git config user.name "GitHub Actions"

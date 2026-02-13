@@ -1,10 +1,10 @@
 # trump-rss
 
-Automated RSS feed generator for Trump-related news sources, including official White House news, campaign news, and aggregated media coverage.
+Automated RSS feed generator for Trump-related and conservative news sources, including official White House news, campaign news, InfoWars breaking news, and aggregated media coverage.
 
 ## 📰 Available Feeds
 
-This project generates three RSS feeds that update automatically 4 times daily:
+This project generates four RSS feeds that update automatically 4 times daily:
 
 1. **Trump Campaign News** (`trump_feed.xml`)
    - Source: https://www.donaldjtrump.com/news
@@ -17,6 +17,10 @@ This project generates three RSS feeds that update automatically 4 times daily:
 3. **White House Wire** (`wire_feed.xml`)
    - Source: https://www.whitehouse.gov/wire/
    - Aggregated news coverage and media mentions
+
+4. **InfoWars Breaking News** (`infowars_feed.xml`)
+   - Source: https://www.infowars.com/breaking-news
+   - Breaking news and updates from InfoWars
 
 ## 🚀 How It Works
 
@@ -54,6 +58,9 @@ python scrape_whitehouse.py
 
 # Wire aggregator
 python scrape_wire.py
+
+# InfoWars breaking news
+python scrape_infowars.py
 ```
 
 The scrapers will generate `.xml` files in the project directory.
@@ -65,6 +72,7 @@ You can subscribe to the feeds directly from this repository:
 - Trump Campaign: `https://raw.githubusercontent.com/JPhx011/trump-rss/main/trump_feed.xml`
 - White House: `https://raw.githubusercontent.com/JPhx011/trump-rss/main/whitehouse_feed.xml`
 - Wire: `https://raw.githubusercontent.com/JPhx011/trump-rss/main/wire_feed.xml`
+- InfoWars: `https://raw.githubusercontent.com/JPhx011/trump-rss/main/infowars_feed.xml`
 
 Just paste these URLs into your RSS reader!
 
@@ -85,6 +93,7 @@ Manual trigger:
 - **Trump scraper**: Uses `requests` + BeautifulSoup for fast HTML parsing
 - **White House scraper**: Uses Selenium for JavaScript-rendered content
 - **Wire scraper**: Uses `requests` + BeautifulSoup
+- **InfoWars scraper**: Uses Selenium for bot-detection avoidance
 - **RSS generation**: Uses `feedgen` library
 
 ## 🤝 Contributing
@@ -93,7 +102,7 @@ This is a personal learning project, but suggestions and improvements are welcom
 
 ## ⚠️ Disclaimer
 
-This is an **unofficial** RSS feed project created for personal use and learning purposes. It is not affiliated with, endorsed by, or connected to Donald J. Trump, the Trump campaign, or the White House.
+This is an **unofficial** RSS feed project created for personal use and learning purposes. It is not affiliated with, endorsed by, or connected to Donald J. Trump, the Trump campaign, the White House, or InfoWars.
 
 ## 📄 License
 
